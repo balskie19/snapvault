@@ -751,6 +751,7 @@ export default function App() {
     setLoadingCloud(false);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchCloudFiles(); }, []);
 
   const Screen = SCREENS[screen] || HomeScreen;
