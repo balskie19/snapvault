@@ -1,0 +1,28 @@
+{
+  "short_name": "SnapVault",
+  "name": "SnapVault — iPhone Storage Backup",
+  "description": "Back up your iPhone photos and videos. Free your storage instantly.",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#3B82F6",
+  "background_color": "#FFFFFF",
+  "scope": "/"
+}
