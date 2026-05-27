@@ -269,49 +269,70 @@ function OnboardingScreen({ nav, t }) {
 }
 
 // ─── AUTH ─────────────────────────────────────────────────────────────────────
+const SECRET_KEY = "SNAP2026";
+
 function AuthScreen({ nav, t }) {
-  const [mode, setMode] = useState("login");
-  const [email, setEmail] = useState("");
-  const [pass, setPass] = useState("");
-  const [name, setName] = useState("");
-  const inp = { width: "100%", padding: "12px 14px", borderRadius: 12, border: `1.5px solid ${t.inputBorder}`,
-    background: t.inputBg, color: t.text, fontFamily: "'Nunito Sans'", fontSize: 14, outline: "none", marginBottom: 10 };
+  const [key, setKey] = useState("");
+  const [error, setError] = useState("");
+  const [show, setShow] = useState(false);
+
+  const handleEnter = () => {
+    if (key.trim().toUpperCase() === SECRET_KEY) {
+      localStorage.setItem("sv_auth", "1");
+      nav("home");
+    } else {
+      setError("Incorrect key. Please try again.");
+      setKey("");
+    }
+  };
+
   return (
-    <div style={{ padding: "28px 24px 40px", background: t.bg, minHeight: "100%", display: "flex", flexDirection: "column" }}>
-      <div className="fade-in" style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 28 }}>
-        <Logo size={52} />
-        <div style={{ fontFamily: "'Nunito'", fontSize: 22, color: t.text, marginTop: 12 }}>SnapVault</div>
-        <div style={{ fontFamily: "'Nunito Sans'", fontSize: 13, color: t.textMuted, marginTop: 4 }}>Your photos, safe forever.</div>
+    <div style={{ padding: "40px 24px", background: t.bg, minHeight: "100%", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <div className="fade-in" style={{ display: "flex", flexDirection: "column", alignItems: "center", marginBottom: 36 }}>
+        <Logo size={60} />
+        <div style={{ fontFamily: "'Nunito'", fontSize: 24, color: t.text, marginTop: 14, fontWeight: 800 }}>SnapVault</div>
+        <div style={{ fontFamily: "'Nunito Sans'", fontSize: 13, color: t.textMuted, marginTop: 6 }}>Your photos, safe forever.</div>
       </div>
-      <div style={{ display: "flex", background: t.bgMuted, borderRadius: 12, padding: 4, marginBottom: 22 }}>
-        {["login","signup"].map(m => (
-          <button key={m} onClick={() => setMode(m)} className="btn-press"
-            style={{ flex: 1, padding: "9px 0", borderRadius: 9, border: "none", cursor: "pointer",
-              background: mode === m ? (t.bg === "#0A0F1E" ? "#243047" : "white") : "transparent",
-              color: mode === m ? t.text : t.textMuted,
-              fontFamily: "'Nunito Sans'", fontSize: 13, fontWeight: 700,
-              boxShadow: mode === m ? "0 1px 6px #00000018" : "none", transition: "all 0.2s" }}>
-            {m === "login" ? "Log In" : "Sign Up"}
+
+      <div className="fade-in-d1" style={{ background: t.bgMuted, borderRadius: 20, padding: "24px 20px", marginBottom: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+          <span style={{ fontSize: 18 }}>🔐</span>
+          <div style={{ fontFamily: "'Nunito'", fontSize: 16, color: t.text, fontWeight: 800 }}>Enter Secret Key</div>
+        </div>
+        <div style={{ fontFamily: "'Nunito Sans'", fontSize: 12, color: t.textMuted, marginBottom: 16, lineHeight: 1.5 }}>
+          Enter your private key to access your cloud storage.
+        </div>
+        <div style={{ position: "relative", marginBottom: 12 }}>
+          <input
+            type={show ? "text" : "password"}
+            placeholder="Your secret key…"
+            value={key}
+            onChange={e => { setKey(e.target.value); setError(""); }}
+            onKeyDown={e => e.key === "Enter" && handleEnter()}
+            style={{ width: "100%", padding: "13px 44px 13px 14px", borderRadius: 12,
+              border: `1.5px solid ${error ? "#EF4444" : t.inputBorder}`,
+              background: t.inputBg, color: t.text, fontFamily: "'Nunito Sans'",
+              fontSize: 15, outline: "none", letterSpacing: show ? 1 : 3 }} />
+          <button onClick={() => setShow(s => !s)}
+            style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
+              background: "none", border: "none", cursor: "pointer", fontSize: 16 }}>
+            {show ? "🙈" : "👁️"}
           </button>
-        ))}
+        </div>
+        {error && (
+          <div style={{ background: "#FEF2F2", borderRadius: 8, padding: "8px 12px", marginBottom: 12,
+            fontFamily: "'Nunito Sans'", fontSize: 12, color: "#EF4444" }}>
+            {error}
+          </div>
+        )}
+        <Btn t={t} onClick={handleEnter}>Enter SnapVault →</Btn>
       </div>
-      <div key={mode} className="fade-in">
-        {mode === "signup" && <input style={inp} placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} />}
-        <input style={inp} type="email" placeholder="Email address" value={email} onChange={e => setEmail(e.target.value)} />
-        <input style={{ ...inp, marginBottom: 18 }} type="password" placeholder="Password" value={pass} onChange={e => setPass(e.target.value)} />
-        <Btn t={t} onClick={() => nav("home")}>{mode === "login" ? "Log In" : "Create Account"}</Btn>
+
+      <div className="fade-in-d2" style={{ textAlign: "center" }}>
+        <div style={{ fontFamily: "'Nunito Sans'", fontSize: 12, color: t.textMuted, lineHeight: 1.6 }}>
+          Keep your secret key private.<br />Share only with trusted people.
+        </div>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, margin: "16px 0" }}>
-        <div style={{ flex: 1, height: 1, background: t.border }} />
-        <span style={{ fontFamily: "'Nunito Sans'", fontSize: 12, color: t.textMuted }}>or</span>
-        <div style={{ flex: 1, height: 1, background: t.border }} />
-      </div>
-      <button onClick={() => nav("home")} className="btn-press card-hover"
-        style={{ width: "100%", padding: "13px 0", borderRadius: 14, border: `1.5px solid ${t.border}`,
-          background: t.bgCard, color: t.text, fontFamily: "'Nunito Sans'", fontSize: 14, fontWeight: 700,
-          cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-        <span style={{ fontSize: 18 }}>🍎</span> Continue with Apple
-      </button>
     </div>
   );
 }
@@ -710,7 +731,7 @@ function SettingsScreen({ nav, t, dark, setDark }) {
         <Btn t={t} onClick={() => nav("plans")} style={{ padding: "11px 0", fontSize: 13 }}>⚡ Upgrade Plan</Btn>
       </div>
       <div className="fade-in-d4">
-        <Btn variant="danger" t={t} onClick={() => nav("onboarding")} style={{ fontSize: 13 }}>Sign Out</Btn>
+        <Btn variant="danger" t={t} onClick={() => { localStorage.removeItem("sv_auth"); nav("onboarding"); }} style={{ fontSize: 13 }}>Sign Out</Btn>
       </div>
     </div>
   );
@@ -727,7 +748,7 @@ const BOTTOM_TABS = [
 const SHOW_TAB = ["home", "upload", "gallery", "settings"];
 
 export default function App() {
-  const [screen, setScreen] = useState("onboarding");
+  const [screen, setScreen] = useState(localStorage.getItem("sv_auth") === "1" ? "home" : "onboarding");
   const [dark, setDark] = useState(false);
   const [cloudFiles, setCloudFiles] = useState([]);
   const [loadingCloud, setLoadingCloud] = useState(false);
