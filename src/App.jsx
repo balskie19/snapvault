@@ -379,11 +379,14 @@ function UploadScreen({ nav, t, onUploadDone }) {
     setUploading(true);
     setError("");
     let uploaded = 0;
-    for (const file of files) {
+    const totalFiles = files.length;
+    for (let fi = 0; fi < totalFiles; fi++) {
+      const file = files[fi];
+      const snapUploaded = uploaded;
       setCurrentFile(file.name);
       try {
         await uploadFile(file, (p) => {
-          const overall = Math.round(((uploaded + p / 100) / files.length) * 100);
+          const overall = Math.round(((snapUploaded + p / 100) / totalFiles) * 100);
           setProgress(overall);
         });
         uploaded++;
