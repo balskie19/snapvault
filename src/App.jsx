@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const photos = [
@@ -98,7 +98,7 @@ function Logo({ size = 40, dark }) {
 // ─── SHARED COMPONENTS ────────────────────────────────────────────────────────
 function StorageMeter({ percent, t, animate }) {
   const [w, setW] = useState(0);
-  useEffect(() => { const id = setTimeout(() => setW(percent), 300); return () => clearTimeout(id); }, [animate]);
+  useEffect(() => { const id = setTimeout(() => setW(percent), 300); return () => clearTimeout(id); }, [animate, percent]);
   const color = percent > 85 ? "#EF4444" : percent > 60 ? "#F59E0B" : "#3B82F6";
   return (
     <div style={{ background: t.bgMuted, borderRadius: 14, padding: "16px 18px" }}>
@@ -408,7 +408,6 @@ function BackupConfirmScreen({ nav, t }) {
       setProgress(Math.min(p, 100));
     }, 200);
   };
-  const dark = t.bg === "#0A0F1E";
   return (
     <div style={{ padding: "24px 20px 32px", background: t.bg, minHeight: "100%" }}>
       <BackBtn onClick={() => nav("browse")} t={t} />
